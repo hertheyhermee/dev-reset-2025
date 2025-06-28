@@ -24,7 +24,7 @@ const suggestFriends = (username) => {
         })
     })
 
-    return suggestions //{...new Set(suggestions)}
+    return [...new Set(suggestions)]
    
 
 }
