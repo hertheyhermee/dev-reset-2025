@@ -2,10 +2,9 @@ import { Router } from 'express'
 import jwt from 'jsonwebtoken'
 import { authenticate } from '../middleware/auth.middleware.js';
 import bcrypt from 'bcrypt'
+import db from '../db/db.js';
 
 const router = Router();
-
-const users = [{ email: "test123@gmail.com", password: '$2b$10$H56hHnglXKzyOVj/ERFj5ukSZLKQCgUMf51b7cy5tNAq7NPW0nRqy' }]
 
 router.post('/register', async (req, res) => {
     const { email, password } = req.body
@@ -14,26 +13,21 @@ router.post('/register', async (req, res) => {
         return res.status(400).json({ message: "Email and valid password required" })
     }
 
-    const existingUser = users.find(user => user.email === email)
+    const existingUser = db.prepare(`SELECT * FROM users WHERE email = ?`).get(email)
     if(existingUser)
         return res.status(400).json({ message: "User already exists" })
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    users.push({ email, password: hashedPassword });
-
-    console.log(users)
+    db.prepare('INSERT INTO users (email, password) VALUES (?, ?)').run(email, hashedPassword);
 
     return res.status(201).json({ message: "User registered successfully" })
 })
 
 router.post('/login', async (req, res) => {
     const { email, password } = req.body
-
-    console.log(users);
     
-
-    const user = users.find(user => user.email === email)
+    const user = db.prepare(`SELECT * FROM users WHERE email = ?`).get(email)
     
     if(!user) {
         return res.status(401).json({message: "Invalid email or password"})
@@ -45,7 +39,7 @@ router.post('/login', async (req, res) => {
         return res.status(401).json({ message: "Invalid credentials!" })
     }
     const token = jwt.sign(
-        { email, role: 'user' },
+        { email, id: user.id },
         process.env.JWT_SECRET,
         { expiresIn: '1h' }
     )
@@ -55,6 +49,11 @@ router.post('/login', async (req, res) => {
     })
 
 
+})
+
+router.get('/me', authenticate, (req, res) => {
+    const { id, email } = req.user
+    res.json({ id, email })
 })
 
 router.get('/dashboard', authenticate, (req, res) => {
