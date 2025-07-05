@@ -4,6 +4,7 @@ import { authenticate } from '../middleware/auth.middleware.js';
 import bcrypt from 'bcrypt'
 import db from '../db/db.js';
 import { authorize } from '../middleware/authorize.js';
+import { loginWithRefresh, refreshAccessToken, logout } from '../controllers/auth.refresh.js';
 
 const router = Router();
 
@@ -82,5 +83,9 @@ router.get('/dashboard', authenticate, (req, res) => {
 router.get('/admin-only', authenticate, authorize('admin'), (req, res) => {
     return res.status(200).json({ message: 'Welcome, admin!' })
 })
+
+router.post('/login-refresh', loginWithRefresh)
+router.post('/refresh-token', refreshAccessToken)
+router.post('/logout', logout)
 
 export default router
