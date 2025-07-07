@@ -53,7 +53,7 @@ function getMe() {
   })
     .then(res => res.json())
     .then(data => {
-      showMessage('👤 ' + JSON.stringify(data.user));
+      showMessage('👤 ' + data.user.email);
     })
     .catch(() => showMessage('Not authenticated'));
 }
