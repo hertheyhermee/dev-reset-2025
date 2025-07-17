@@ -1,0 +1,24 @@
+{
+  "name": "mfa-advanced-auth-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node --watch --trace-warnings --env-file=.env index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "dotenv": "^17.1.0",
+    "express": "^5.1.0",
+    "express-session": "^1.18.1",
+    "mongoose": "^8.16.2",
+    "qrcode": "^1.5.4",
+    "speakeasy": "^2.0.0",
+    "twilio": "^5.7.2"
+  }
+}

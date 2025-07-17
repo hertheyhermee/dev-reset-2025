@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Advanced MFA Auth Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f6f8fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+    h2 {
+      color: #333;
+    }
+    input, select {
+      width: 100%;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+    button {
+      width: 100%;
+      padding: 0.75rem;
+      margin: 0.25rem 0;
+      border: none;
+      border-radius: 5px;
+      background: #007bff;
+      color: white;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    #message {
+      margin-top: 1rem;
+      text-align: center;
+      color: #444;
+    }
+    #qr-section {
+      display: none;
+      margin: 1rem 0;
+    }
+    #totp-section, #sms-section {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Advanced MFA Auth Demo</h2>
+    <div id="signup-section">
+      <input type="email" id="signup-email" placeholder="Email"><br>
+      <input type="password" id="signup-password" placeholder="Password"><br>
+      <select id="signup-method">
+        <option value="totp">Authenticator App (TOTP)</option>
+        <option value="sms">SMS</option>
+      </select>
+      <input type="text" id="signup-phone" placeholder="Phone (for SMS)" style="display:none;"><br>
+      <button onclick="signup()">Sign Up</button>
+    </div>
+    <div id="qr-section">
+      <p>Scan this QR code with your authenticator app:</p>
+      <img id="qr-img" src="" width="200"><br>
+      <small id="otpauth-url"></small>
+    </div>
+    <div id="login-section">
+      <input type="email" id="login-email" placeholder="Email"><br>
+      <input type="password" id="login-password" placeholder="Password"><br>
+      <button onclick="login()">Login</button>
+    </div>
+    <div id="totp-section">
+      <input type="text" id="totp" placeholder="Enter TOTP code"><br>
+      <button onclick="verifyTotp()">Verify TOTP</button>
+    </div>
+    <div id="sms-section">
+      <input type="text" id="sms" placeholder="Enter SMS code"><br>
+      <button onclick="verifySms()">Verify SMS</button>
+    </div>
+    <button onclick="getProtected()">Protected API</button>
+    <button onclick="logout()">Logout</button>
+    <p id="message"></p>
+  </div>
+  <script src="./main.js"></script>
+  <script>
+    // Show/hide phone input based on method
+    document.getElementById('signup-method').addEventListener('change', function() {
+      document.getElementById('signup-phone').style.display = this.value === 'sms' ? 'block' : 'none';
+    });
+  </script>
+</body>
+</html> 
